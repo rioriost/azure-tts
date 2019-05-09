@@ -6,7 +6,7 @@ Before starting using the script, you need to create Azure Text-to-Speech servic
 After creating the instance of Azure TTS, you could find the apiKey on Azure Portal. Put it into the script as follows.
 
 apiKey="b0e9cb8eb92744018b7d1852622c2b84"
-# This key is just a sample.
+(This key is just a sample.)
 
 How to enable the script as a service.
 
