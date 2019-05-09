@@ -18,6 +18,11 @@ fi
 
 text=$1
 
+if [ ${#text} -ge 1000 ]; then
+	echo "Azure TTS can handle the text up to 1,000 bytes."
+	exit
+fi
+
 access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-Subscription-Key: ${apiKey}" -H "Content-Length: 0")
 
 if [ "${access_token}" != "" ]; then
