@@ -1,0 +1,36 @@
+#!/bin/bash
+
+AccessTokenUri="https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+ttsServiceUri="https://eastus.tts.speech.microsoft.com/cognitiveservices/v1"
+apiKey="Place your apiKey for Azure Text-to-Speech here"
+
+# See https://docs.microsoft.com/ja-jp/azure/cognitive-services/speech-service/language-support#text-to-speech
+ttsLang="en-US"
+ttsGender="Female"
+ttsName="en-US-JessaNeural"
+
+comName=$(basename $0)
+
+if [ "$1" == "" ]; then
+	echo "${comName} 'English sentece to be pronounced'"
+	exit
+fi
+
+text=$1
+
+access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-Subscription-Key: ${apiKey}" -H "Content-Length: 0")
+
+if [ "${access_token}" != "" ]; then
+	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"${ttsLang}\"><voice xml:lang=\"${ttsLang}\" xml:gender=\"${ttsGender}\" name=\"${ttsName}\">${text}</voice></speak>"
+	dataLen=$(echo -n ${data} | wc -c)
+	tmpFile=$(mktemp)
+	result=$(curl -o ${tmpFile} -sS -w '\n' ${ttsServiceUri} -XPOST --data "${data}" \
+		-H "Content-type: application/ssml+xml" \
+		-H "X-Microsoft-OutputFormat: riff-24khz-16bit-mono-pcm" \
+		-H "Authorization: Bearer ${access_token}" \
+		-H "X-Search-AppId: 07D3234E49CE426DAA29772419F436CA" \
+		-H "X-Search-ClientID: 1ECFAE91408841A480F00935DC390960" \
+		-H "User-Agent: ${comName}" \
+		-H "Content-Length: ${dataLen}")
+	afplay $tmpFile
+fi
