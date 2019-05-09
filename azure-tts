@@ -22,7 +22,6 @@ access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-
 
 if [ "${access_token}" != "" ]; then
 	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"${ttsLang}\"><voice xml:lang=\"${ttsLang}\" xml:gender=\"${ttsGender}\" name=\"${ttsName}\">${text}</voice></speak>"
-	dataLen=$(echo -n ${data} | wc -c)
 	tmpFile=$(mktemp)
 	result=$(curl -o ${tmpFile} -sS -w '\n' ${ttsServiceUri} -XPOST --data "${data}" \
 		-H "Content-type: application/ssml+xml" \
@@ -31,6 +30,7 @@ if [ "${access_token}" != "" ]; then
 		-H "X-Search-AppId: 07D3234E49CE426DAA29772419F436CA" \
 		-H "X-Search-ClientID: 1ECFAE91408841A480F00935DC390960" \
 		-H "User-Agent: ${comName}" \
-		-H "Content-Length: ${dataLen}")
+		-H "Content-Length: ${#data}")
 	afplay $tmpFile
+	rm $tmpFile
 fi
