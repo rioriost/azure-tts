@@ -4,6 +4,15 @@ AccessTokenUri="https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issue
 ttsServiceUri="https://southeastasia.tts.speech.microsoft.com/cognitiveservices/v1"
 apiKey="Place your apiKey for Azure Text-to-Speech here"
 
+uname=$(uname)
+if [ $uname == 'Darwin' ]; then
+	mktemp_com="mktemp"
+	play_com="afplay"
+elif [ "$(expr substr $uname 1 5)" == 'Linux' ]; then
+	mktemp_com="mktemp"
+	play_com="paplay"
+fi
+
 # See https://docs.microsoft.com/ja-jp/azure/cognitive-services/speech-service/language-support#text-to-speech
 ttsLang="en-US"
 ttsGender="Female"
@@ -27,7 +36,7 @@ access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-
 
 if [ "${access_token}" != "" ]; then
 	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"${ttsLang}\"><voice xml:lang=\"${ttsLang}\" xml:gender=\"${ttsGender}\" name=\"${ttsName}\">${text}</voice></speak>"
-	tmpFile=$(mktemp)
+	tmpFile=$(${mktemp_cmd})
 	result=$(curl -o ${tmpFile} -sS -w '\n' ${ttsServiceUri} -XPOST --data "${data}" \
 		-H "Content-type: application/ssml+xml" \
 		-H "X-Microsoft-OutputFormat: riff-24khz-16bit-mono-pcm" \
@@ -36,6 +45,6 @@ if [ "${access_token}" != "" ]; then
 		-H "X-Search-ClientID: 1ECFAE91408841A480F00935DC390960" \
 		-H "User-Agent: ${comName}" \
 		-H "Content-Length: ${#data}")
-	afplay $tmpFile
+	${play_com} $tmpFile
 	rm $tmpFile
 fi
