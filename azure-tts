@@ -36,7 +36,7 @@ access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-
 
 if [ "${access_token}" != "" ]; then
 	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"${ttsLang}\"><voice xml:lang=\"${ttsLang}\" xml:gender=\"${ttsGender}\" name=\"${ttsName}\">${text}</voice></speak>"
-	tmpFile=$(${mktemp_cmd})
+	tmpFile=$(${mktemp_com})
 	result=$(curl -o ${tmpFile} -sS -w '\n' ${ttsServiceUri} -XPOST --data "${data}" \
 		-H "Content-type: application/ssml+xml" \
 		-H "X-Microsoft-OutputFormat: riff-24khz-16bit-mono-pcm" \
