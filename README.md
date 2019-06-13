@@ -15,7 +15,7 @@ How to enable the script as a service.
 3. Put azure-tts under ~/bin/
 4. Add permission to execute. e.g. chmod 755 ~/bin/azure-tts
 
-After enabling the service, you can call it from any apps on macOS with contextual menu.
+After enabling the service, you can call it from any apps on macOS with the contextual menu.
 
 If you get the message related to accessibility settings, try tccutil to reset the permissions.
 
