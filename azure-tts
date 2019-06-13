@@ -1,7 +1,7 @@
 #!/bin/bash
 
-AccessTokenUri="https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
-ttsServiceUri="https://eastus.tts.speech.microsoft.com/cognitiveservices/v1"
+AccessTokenUri="https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+ttsServiceUri="https://southeastasia.tts.speech.microsoft.com/cognitiveservices/v1"
 apiKey="Place your apiKey for Azure Text-to-Speech here"
 
 # See https://docs.microsoft.com/ja-jp/azure/cognitive-services/speech-service/language-support#text-to-speech
