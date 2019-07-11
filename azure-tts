@@ -1,8 +1,13 @@
 #!/bin/bash
 
+#Set the name of your cognitive service
+readonly COG_NAME="NAME OF YOUR COGNITIVE SERVICE"
+#Set the name of your resource group in which congnitive service is deployed
+readonly RES_GRP="NAME OF YOUR RESOURCE GROUP"
+
 AccessTokenUri="https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken"
 ttsServiceUri="https://southeastasia.tts.speech.microsoft.com/cognitiveservices/v1"
-apiKey="Place your apiKey for Azure Text-to-Speech here"
+apiKey=$(az cognitiveservices account keys list -n ${COG_NAME} -g ${RES_GRP} --query key1 -o tsv)
 
 uname=$(uname)
 if [ $uname == 'Darwin' ]; then
