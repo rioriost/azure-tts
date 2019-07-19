@@ -1,12 +1,7 @@
 # azure-tts
 A simple bash script to use Azure Text-to-Speech on macOS
 
-Before starting using the script, you need to create Azure Text-to-Speech service on Azure Portal. The voice "en-US-JessaNeural" is set by default, so you need to configure the service with 'Standard' (S0) Pricing Tier to enable neural voice.
-
-After creating the instance of Azure TTS, you could find the apiKey on Azure Portal. Put it into the script as follows.
-
-apiKey="b0e9cb8eb92744018b7d1852622c2b84"
-(This key is just a sample.)
+Before starting using the script, you need to create Azure Text-to-Speech service on Azure Portal. The voice "en-US-JessaNeural" is set by default, so you need to configure the service with 'Standard' (S0) Pricing Tier to enable neural voice. Also, you need to install Azure CLI. e.g. brew install azure-cli
 
 How to enable the script as a service.
 
