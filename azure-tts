@@ -1,13 +1,8 @@
 #!/bin/bash
 
-#Set the name of your cognitive service
-readonly COG_NAME="NAME OF YOUR COGNITIVE SERVICE"
-#Set the name of your resource group in which congnitive service is deployed
-readonly RES_GRP="NAME OF YOUR RESOURCE GROUP"
-
-AccessTokenUri="https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken"
-ttsServiceUri="https://southeastasia.tts.speech.microsoft.com/cognitiveservices/v1"
-apiKey=$(az cognitiveservices account keys list -n ${COG_NAME} -g ${RES_GRP} --query key1 -o tsv)
+AccessTokenUri="https://japaneast.api.cognitive.microsoft.com/sts/v1.0/issuetoken"
+ttsServiceUri="https://japaneast.tts.speech.microsoft.com/cognitiveservices/v1"
+apiKey=$ttsapikey
 
 uname=$(uname)
 if [ $uname == 'Darwin' ]; then
@@ -19,14 +14,14 @@ elif [ "$(expr substr $uname 1 5)" == 'Linux' ]; then
 fi
 
 # See https://docs.microsoft.com/ja-jp/azure/cognitive-services/speech-service/language-support#text-to-speech
-ttsLang="en-US"
+ttsLang="ja-JP"
 ttsGender="Female"
-ttsName="en-US-JessaNeural"
+ttsName="ja-JP-NanamiNeural"
 
 comName=$(basename $0)
 
 if [ "$1" == "" ]; then
-	echo "${comName} 'English sentece to be pronounced'"
+	echo "${comName} 'Japanese sentence to be pronounced'"
 	exit
 fi
 
@@ -40,16 +35,12 @@ fi
 access_token=$(curl -sS -w '\n' ${AccessTokenUri} -XPOST --data "" -H "Ocp-Apim-Subscription-Key: ${apiKey}" -H "Content-Length: 0")
 
 if [ "${access_token}" != "" ]; then
-	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"${ttsLang}\"><voice xml:lang=\"${ttsLang}\" xml:gender=\"${ttsGender}\" name=\"${ttsName}\">${text}</voice></speak>"
+	data="<?xml version=\"1.0\"?><speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xmlns:mstts=\"https://www.w3.org/2001/mstts\" xml:lang=\"${ttsLang}\"><voice name=\"${ttsName}\">${text}</voice></speak>"
 	tmpFile=$(${mktemp_com})
+	echo $tmpFile
 	result=$(curl -o ${tmpFile} -sS -w '\n' ${ttsServiceUri} -XPOST --data "${data}" \
 		-H "Content-type: application/ssml+xml" \
 		-H "X-Microsoft-OutputFormat: riff-24khz-16bit-mono-pcm" \
-		-H "Authorization: Bearer ${access_token}" \
-		-H "X-Search-AppId: 07D3234E49CE426DAA29772419F436CA" \
-		-H "X-Search-ClientID: 1ECFAE91408841A480F00935DC390960" \
-		-H "User-Agent: ${comName}" \
-		-H "Content-Length: ${#data}")
+		-H "Authorization: Bearer ${access_token}")
 	${play_com} $tmpFile
-	rm $tmpFile
 fi
